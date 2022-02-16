@@ -1,0 +1,24 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "9000:5432"
+
+  django:
+    build: .
+    command: python src/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    env_file: .env
+volumes:
+  pg_data:
+    driver: local
